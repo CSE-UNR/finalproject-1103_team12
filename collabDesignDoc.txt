@@ -1,1 +1,9 @@
 Test Test Test Test 
+
+Functions:
+Kevin: main through displayImage()
+
+Anthony: edit through brightImage()
+
+Try to get all the functions done by Saturday
+
