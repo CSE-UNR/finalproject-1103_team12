@@ -24,7 +24,7 @@ int image[MAX_ROWS][MAX_COLS];
 
 //main function
 int main(){
-
+	mainMenu();
 	return 0;
 }
 
