@@ -9,18 +9,21 @@
 #define MAX_COLS 100
 
 //function prototypes
-void displayMenu();
-void loadImage(char filename[]);
+void mainMenu();
+void loadImage();
 void displayImage();
 void editImage();
-void cropImage(int image[MAX_ROWS][MAX_COLS], int* rows, int* cols, int leftCol, int rightCol, int top_row, int bot_row);
+void cropImage(int image[MAX_ROWS][MAX_COLS], int* rows, int* cols);
 void dimImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]);
 void brightenImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]);
-void saveImage(char filename[], int numRows, int numCols, int image[MAX_ROWS][MAX_COLS]);
+void saveImage(char filename[]);
+void markedImage(int image[MAX_ROWS][MAX_COLS], int rows, int cols, int top_row, int bot_row, int leftCol, int rightCol);
+void croppedImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]);
 
 //global vars
 int numRows, numCols;
 int image[MAX_ROWS][MAX_COLS];
+bool imageLoaded = false;
 
 //main function
 int main(){
@@ -32,7 +35,7 @@ int main(){
 void mainMenu(){
 
 }
-void loadImage(char filename[]){
+void loadImage(){
 
 }
 void displayImage(){
@@ -51,13 +54,13 @@ void editImage(){
 		
 		switch(choice){
 			case 1:
-				cropImage();
+				cropImage(image, &numRows, &numCols);
 				break;
 			case 2:
-				dimImage();
+				dimImage(numRows, numCols, image);
 				break;
 			case 3:
-				brightenImage();
+				brightenImage(numRows, numCols, image);
 				break;
 			case 0:
 				printf("Returning to the main menu!\n");
@@ -68,16 +71,33 @@ void editImage(){
 	}while(choice != 0);
 	
 }
-void cropImage(int image[MAX_ROWS][MAX_COLS], int* rows, int* cols, int leftCol, int rightCol, int top_row, int bot_row){
-	int cropped_pic[MAX_ROWS][MAX_COLS];
-	int newRows = bot_row - top_row + 1;
+void cropImage(int image[MAX_ROWS][MAX_COLS], int* rows, int* cols){
+	int leftCol, rightCol, top_row, bot_row;
+    int cropped_pic[MAX_ROWS][MAX_COLS];
+	
+    printf("Which column do you want to be the new left side? ");
+    scanf("%d", &leftCol);
+    printf("Which column do you want to be the new right side? ");
+    scanf("%d", &rightCol);
+
+    printf("Which row do you want to be the new top? ");
+    scanf("%d", &top_row);
+    printf("Which row do you want to be the new bottom? ");
+    scanf("%d", &bot_row);
+
+    int newRows = bot_row - top_row + 1;
 	int newCols = rightCol - leftCol + 1;
 	
 	for(int i = top_row; i <= bot_row; i++){
 		for(int j = leftCol; j <= rightCol; j++){
-			cropped_pic[i - top_row][j - leftCol] = image[i][j]
+			cropped_pic[i - top_row][j - leftCol] = image[i][j];
 		}
 	}
+
+	*rows = newRows;
+	*cols = newCols;
+
+	displayImage(cropped_pic, newRows, newCols);
 }
 void dimImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
 	for(int i = 0; i < rows; i++){
@@ -88,6 +108,12 @@ void dimImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
 			}
 		}
 	}
+	for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+            printf("%3d", image[i][j]);
+        }
+        printf("\n");
+    }
 }
 void brightenImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
 	for(int i = 0; i < rows; i++){
@@ -98,6 +124,12 @@ void brightenImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
 			}
 		}
 	}
+	for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+            printf("%3d", image[i][j]);
+        }
+        printf("\n");
+    }
 }
 void saveImage(char filename[]){
 	char customFile[100];
@@ -124,4 +156,39 @@ void saveImage(char filename[]){
 		fclose(file);
 		printf("Image successfully saved!");
 	}
+}
+void markedImage(int image[MAX_ROWS][MAX_COLS], int rows, int cols, int top_row, int bot_row, int leftCol, int rightCol){
+    //top left and right markers
+    printf("    ");
+    for(int j = 0; j < cols; j++){
+        printf("%3d", j);
+    }
+    printf("\n");
+    //first and last column markers
+    for(int i = 0; i < rows; i++){
+        printf("%3d", i);
+        for(int j = 0; j < cols; j++){
+            if(j == leftCol || j == rightCol){
+                printf("%3d", j);
+            } else {
+               printf("%3d", image[i][j]); 
+            }
+        }
+        printf("\n");
+    }
+
+    //bottom left marker? (needs work, will print beneath bottom left as written)
+    printf("    ");
+    for(int j = 0; j < cols; j++){
+        printf("%3d", j);
+    }
+    printf("\n");
+}
+void croppedImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
+    for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+            printf("%3d", image[i][j]);
+        }
+        printf("\n");
+    }
 }
