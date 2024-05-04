@@ -71,6 +71,7 @@ void editImage(){
 	}while(choice != 0);
 	
 }
+//the cropping works and will do the job, but its not displaying properly right now, not 100% sure what's going on with it
 void cropImage(int image[MAX_ROWS][MAX_COLS], int* rows, int* cols){
 	int leftCol, rightCol, top_row, bot_row;
     int cropped_pic[MAX_ROWS][MAX_COLS];
@@ -157,6 +158,7 @@ void saveImage(char filename[]){
 		printf("Image successfully saved!");
 	}
 }
+//function to display the test image with the corner markings for rows/columns
 void markedImage(int image[MAX_ROWS][MAX_COLS], int rows, int cols, int top_row, int bot_row, int leftCol, int rightCol){
     //top left and right markers
     printf("    ");
@@ -184,6 +186,7 @@ void markedImage(int image[MAX_ROWS][MAX_COLS], int rows, int cols, int top_row,
     }
     printf("\n");
 }
+//this is kind of useless right now, but can be used if we need to explicitly call the cropped image anywhere
 void croppedImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
     for(int i = 0; i < rows; i++){
         for(int j = 0; j < cols; j++){
