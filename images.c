@@ -37,25 +37,25 @@ void mainMenu(){
 
 }
 void loadImage(){
-    char filename[100];
-    printf("what is the name of the file? ");
-    scanf("%s", filename);
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        printf("Coudl not find an image with that file name.\n");
-        return;
-    }
+	char filename[100];
+	printf("what is the name of the file? ");
+	scanf("%s", filename);
+	FILE *file = fopen(filename, "r");
+	if (file == NULL) {
+		printf("Coudl not find an image with that file name.\n");
+		return;
+	}
 
-    fscanf(file, "%d %d", &numRows, &numCols);
-    for (int i = 0; i < numRows; i++) {
-        for (int j = 0; j < numCols; j++) {
-            fscanf(file, "%d", &image[i][j]);
-        }
-    }
+	fscanf(file, "%d %d", &numRows, &numCols);
+	for (int i = 0; i < numRows; i++) {
+		for (int j = 0; j < numCols; j++) {
+			fscanf(file, "%d", &image[i][j]);
+		}
+	}
 
-    fclose(file);
-    imageLoaded = true;
-    printf("Image successfully loaded!\n");
+	fclose(file);
+	imageLoaded = true;
+	printf("Image successfully loaded!\n");
 }
 
 	
