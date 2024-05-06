@@ -33,13 +33,65 @@ int main(){
 
 //function definitions
 void mainMenu(){
+	for 
 
 }
 void loadImage(){
+    char filename[100];
+    printf("what is the name of the file? ");
+    scanf("%s", filename);
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Coudl not find an image with that file name.\n");
+        return;
+    }
 
+    fscanf(file, "%d %d", &numRows, &numCols);
+    for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
+            fscanf(file, "%d", &image[i][j]);
+        }
+    }
+
+    fclose(file);
+    imageLoaded = true;
+    printf("Image successfully loaded!\n");
 }
-void displayImage(){
 
+	
+void displayImage(){
+	if (!imageLoaded) {
+		printf("Sorry, no image to display\n");
+	return;
+	}
+
+	for (int i = 0; i < numRows; i++) {
+		for (int j = 0; j < numCols; j++) {
+			char displayChar = ' ';
+			switch (image[i][j]) {
+				case 0: 
+					displayChar = ' '; 
+					break;
+				case 1: 
+					displayChar = '.';
+					break;
+				case 2:
+					displayChar = 'o';
+					break;
+				case 3:
+					displayChar = 'O';
+					break;
+				case 4:
+					displayChar = '0';
+					break;
+				default:
+					displayChar = '?';
+					break; // In case of unexpected values or errors with images, good reference 
+				}
+			printf("%c", displayChar);
+		}
+	printf("\n");
+	}
 }
 void editImage(){
 	int choice;
