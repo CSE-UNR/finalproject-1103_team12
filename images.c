@@ -61,7 +61,8 @@ void mainMenu(){
 	}
 	} while (choice != 0);
 }
-
+//needs work, we need to read every value from the file and then use the 2D array
+//while fscnaf?
 void loadImage(){
 	char filename[100];
 	printf("What is the name of the file? ");
@@ -76,6 +77,7 @@ void loadImage(){
 	for (int i = 0; i < numRows; i++) {
 		for (int j = 0; j < numCols; j++) {
 			fscanf(file, "%d", &image[i][j]);
+			printf("%d", image[i][j]);
 		}
 	}
 
@@ -93,6 +95,7 @@ void displayImage(){
 
 	for (int i = 0; i < numRows; i++) {
 		for (int j = 0; j < numCols; j++) {
+			// printf("%d", image[i][j]);
 			char displayChar = ' ';
 			switch (image[i][j]) {
 				case 0: 
@@ -114,9 +117,9 @@ void displayImage(){
 					displayChar = '?';
 					break; // In case of unexpected values or errors with images, good reference 
 				}
-			printf("%c", displayChar);
+			//printf("%c", displayChar);
 		}
-	printf("\n");
+	//printf("\n");
 	}
 }
 void editImage(){
