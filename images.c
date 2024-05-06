@@ -33,9 +33,35 @@ int main(){
 
 //function definitions
 void mainMenu(){
-	for 
+	int choice;
+	do {
+		printf("**ERINSTAGRAM**\n");
+		printf("1: Load image\n");
+		printf("2: Display image\n");
+		printf("3: Edit image\n");
+		printf("0: Exit\n\n");
+		printf("Choose from one of the options above: ");
+		scanf("%d", &choice);
 
+	switch (choice) {
+		case 1:
+			loadImage();
+			break;
+		case 2:
+			displayImage();
+			break;
+		case 3:
+			editImage();
+			break;
+		case 0:
+			printf("Goodbye!\n");
+			break;
+		default:
+			printf("Invalid option, please try again.\n");
+	}
+	} while (choice != 0);
 }
+
 void loadImage(){
 	char filename[100];
 	printf("what is the name of the file? ");
