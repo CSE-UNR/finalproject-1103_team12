@@ -54,21 +54,21 @@ void mainMenu(){
 			editImage();
 			break;
 		case 0:
-			printf("Goodbye!\n");
+			printf("Goodbye!\n\n");
 			break;
 		default:
-			printf("Invalid option, please try again.\n");
+			printf("Invalid option, please try again.\n\n");
 	}
 	} while (choice != 0);
 }
 
 void loadImage(){
 	char filename[100];
-	printf("what is the name of the file? ");
+	printf("What is the name of the file? ");
 	scanf("%s", filename);
 	FILE *file = fopen(filename, "r");
 	if (file == NULL) {
-		printf("Coudl not find an image with that file name.\n");
+		printf("Could not find an image with that file name.\n");
 		return;
 	}
 
@@ -121,32 +121,36 @@ void displayImage(){
 }
 void editImage(){
 	int choice;
-	do{
-		printf("**EDITING**\n");
-		printf("1: Crop image\n");
-		printf("2: Dim image\n");
-		printf("3: Brighten Image\n");
-		printf("0: Return to main menu\n\n");
-		printf("Choose from one of the options above: ");
-		scanf("%d", &choice);
+	if(!imageLoaded){
+		printf("Sorry, no image to edit!\n\n");
+	} else {
+		do{
+			printf("**EDITING**\n");
+			printf("1: Crop image\n");
+			printf("2: Dim image\n");
+			printf("3: Brighten Image\n");
+			printf("0: Return to main menu\n\n");
+			printf("Choose from one of the options above: ");
+			scanf("%d", &choice);
 		
-		switch(choice){
-			case 1:
-				cropImage(image, &numRows, &numCols);
-				break;
-			case 2:
-				dimImage(numRows, numCols, image);
-				break;
-			case 3:
-				brightenImage(numRows, numCols, image);
-				break;
-			case 0:
-				printf("Returning to the main menu!\n");
-				break;
-			default:
-				printf("Invalid choice! Please try again.\n");
-		}
-	}while(choice != 0);
+			switch(choice){
+				case 1:
+					cropImage(image, &numRows, &numCols);
+					break;
+				case 2:
+					dimImage(numRows, numCols, image);
+					break;
+				case 3:
+					brightenImage(numRows, numCols, image);
+					break;
+				case 0:
+					printf("Returning to the main menu!\n");
+					break;
+				default:
+					printf("Invalid choice! Please try again.\n");
+			}
+		}while(choice != 0);
+	}
 	
 }
 //the cropping works and will do the job, but its not displaying properly right now, not 100% sure what's going on with it
@@ -226,7 +230,7 @@ void saveImage(char filename[]){
 		}
 		
 		fprintf(file, "%d %d\n", numRows, numCols);
-		for(int i = o; i < numRows; i++){
+		for(int i = 0; i < numRows; i++){
 			for(int j = 0; j < numCols; j++){
 				fprintf(file, "%d ", image[i][j]);
 			}
