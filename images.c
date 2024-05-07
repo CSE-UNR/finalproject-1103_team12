@@ -61,9 +61,7 @@ void mainMenu(){
 	}
 	} while (choice != 0);
 }
-//needs work, we need to read every value from the file and then use the 2D array
-//while fscnaf?
-void loadImage(){
+void loadImage() {
 	char filename[100];
 	printf("What is the name of the file? ");
 	scanf("%s", filename);
@@ -72,37 +70,27 @@ void loadImage(){
 		printf("Could not find an image with that file name.\n");
 		return;
 	}
-
 	numRows = 0;
-	numCols = 0;
-
-	while(numRows < MAX_ROWS && fscanf(file, "%d", &image[numRows][numCols]) == 1){
-		numCols++;
-		if(numCols >= MAX_COLS){
-			numCols = 0;
-			numRows++;
+	char line[100];  // Use a constant size for the line buffer.
+	while (fgets(line, 100, file) && numRows < MAX_ROWS) {
+		numCols = 0;  // Reset number of columns for each new line
+		for (int i = 0; line[i] != '\0' && numCols < MAX_COLS; i++) {
+			if (line[i] >= '0' && line[i] <= '9') {
+				image[numRows][numCols++] = line[i] - '0';
+			}
 		}
+		numRows++;
 	}
-
 	fclose(file);
 	imageLoaded = true;
 	printf("Image successfully loaded!\n");
-
-	for(int i = 0; i < numRows; i++){
-		for(int j = 0; j < numCols; j++){
-			printf("%d", image[i][j]);
-		}
-		printf("\n\n");
-	}
 }
-
 	
 void displayImage(){
 	if (!imageLoaded) {
 		printf("Sorry, no image to display\n");
 	return;
 	}
-
 	for (int i = 0; i < numRows; i++) {
 		for (int j = 0; j < numCols; j++) {
 			//printf("%d", image[i][j]);
