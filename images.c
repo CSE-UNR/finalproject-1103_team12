@@ -19,6 +19,7 @@ void brightenImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]);
 void saveImage(char filename[]);
 void markedImage(int image[MAX_ROWS][MAX_COLS], int rows, int cols, int top_row, int bot_row, int leftCol, int rightCol);
 void croppedImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]);
+void rotate90AndSave();
 
 //global vars
 int numRows, numCols;
@@ -130,6 +131,7 @@ void editImage(){
 			printf("1: Crop image\n");
 			printf("2: Dim image\n");
 			printf("3: Brighten Image\n");
+			printf("4:rotate 90\n");
 			printf("0: Return to main menu\n\n");
 			printf("Choose from one of the options above: ");
 			scanf("%d", &choice);
@@ -143,6 +145,9 @@ void editImage(){
 					break;
 				case 3:
 					brightenImage(numRows, numCols, image);
+					break;
+				case 4:
+					rotate90AndSave();
 					break;
 				case 0:
 					printf("Returning to the main menu!\n");
@@ -278,3 +283,63 @@ void croppedImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
         printf("\n");
     }
 }
+
+void rotate90AndSave() {
+	if (!imageLoaded) {
+		printf("No image loaded to rotate!\n");
+		return;
+	}
+
+	int rotatedImage[MAX_COLS][MAX_ROWS]; // temp storage for rotated image
+	int originalNumRows = numRows;
+	int originalNumCols = numCols;
+
+    // Rotate the image 90 degrees clockwise as stated on design
+	for (int i = 0; i < originalNumRows; i++) {
+		for (int j = 0; j < originalNumCols; j++) {
+	rotatedImage[j][originalNumRows - 1 - i] = image[i][j];
+		}
+	}
+
+    // copy the rotated image back to the original image array in order to write it
+	for (int i = 0; i < originalNumCols; i++) {
+		for (int j = 0; j < originalNumRows; j++) {
+		image[i][j] = rotatedImage[i][j];
+		}
+	}
+
+    // Update the global dimensions to reflect the rotation
+	numRows = originalNumCols;
+	numCols = originalNumRows;
+
+    // Display the rotated image
+	displayImage();
+
+    // Prompt user to save the rotated image
+	char choice;
+	printf("Would you like to save image? (y/n): ");
+	scanf(" %c", &choice);
+
+	if (choice == 'y' || choice == 'Y') {
+		char filename[100];
+		printf("What do you want to name the image file? (include the extension): ");
+		scanf("%s", filename);
+		FILE *file = fopen(filename, "w");
+		if (file == NULL) {
+			printf("Error: Cannot open file for writing.\n");
+			return;
+		}
+
+		for (int i = 0; i < numRows; i++) {
+			for (int j = 0; j < numCols; j++) {
+				fprintf(file, "%d ", image[i][j]);
+			}
+			fprintf(file, "\n");
+		}
+		fclose(file);
+		printf("Image successfully saved as %s!\n", filename);
+	} else {
+		printf("Image not saved.\n");
+	}
+}
+
