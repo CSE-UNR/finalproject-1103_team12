@@ -73,17 +73,27 @@ void loadImage(){
 		return;
 	}
 
-	fscanf(file, "%d %d", &numRows, &numCols);
-	for (int i = 0; i < numRows; i++) {
-		for (int j = 0; j < numCols; j++) {
-			fscanf(file, "%d", &image[i][j]);
-			printf("%d", image[i][j]);
+	numRows = 0;
+	numCols = 0;
+
+	while(numRows < MAX_ROWS && fscanf(file, "%d", &image[numRows][numCols]) == 1){
+		numCols++;
+		if(numCols >= MAX_COLS){
+			numCols = 0;
+			numRows++;
 		}
 	}
 
 	fclose(file);
 	imageLoaded = true;
 	printf("Image successfully loaded!\n");
+
+	for(int i = 0; i < numRows; i++){
+		for(int j = 0; j < numCols; j++){
+			printf("%d", image[i][j]);
+		}
+		printf("\n\n");
+	}
 }
 
 	
@@ -95,7 +105,7 @@ void displayImage(){
 
 	for (int i = 0; i < numRows; i++) {
 		for (int j = 0; j < numCols; j++) {
-			// printf("%d", image[i][j]);
+			//printf("%d", image[i][j]);
 			char displayChar = ' ';
 			switch (image[i][j]) {
 				case 0: 
@@ -117,9 +127,9 @@ void displayImage(){
 					displayChar = '?';
 					break; // In case of unexpected values or errors with images, good reference 
 				}
-			//printf("%c", displayChar);
+			printf("%c", displayChar);
 		}
-	//printf("\n");
+	printf("\n");
 	}
 }
 void editImage(){
