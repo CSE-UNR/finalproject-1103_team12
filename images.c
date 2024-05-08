@@ -16,23 +16,21 @@ void editImage();
 void cropImage(int image[MAX_ROWS][MAX_COLS], int* rows, int* cols);
 void dimImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]);
 void brightenImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]);
-void saveImage(char filename[]);
-void markedImage(int image[MAX_ROWS][MAX_COLS], int rows, int cols, int top_row, int bot_row, int leftCol, int rightCol);
+void saveImage();
+void markedImage();
 void croppedImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]);
 void rotate90AndSave();
 
-//global vars
 int numRows, numCols;
 int image[MAX_ROWS][MAX_COLS];
+char displayChar;
 bool imageLoaded = false;
 
-//main function
 int main(){
 	mainMenu();
 	return 0;
 }
 
-//function definitions
 void mainMenu(){
 	int choice;
 	do {
@@ -72,9 +70,9 @@ void loadImage() {
 		return;
 	}
 	numRows = 0;
-	char line[100];  // Use a constant size for the line buffer.
+	char line[100];
 	while (fgets(line, 100, file) && numRows < MAX_ROWS) {
-		numCols = 0;  // Reset number of columns for each new line
+		numCols = 0;
 		for (int i = 0; line[i] != '\0' && numCols < MAX_COLS; i++) {
 			if (line[i] >= '0' && line[i] <= '9') {
 				image[numRows][numCols++] = line[i] - '0';
@@ -85,8 +83,7 @@ void loadImage() {
 	fclose(file);
 	imageLoaded = true;
 	printf("Image successfully loaded!\n");
-}
-	
+}	
 void displayImage(){
 	if (!imageLoaded) {
 		printf("Sorry, no image to display\n");
@@ -94,7 +91,6 @@ void displayImage(){
 	}
 	for (int i = 0; i < numRows; i++) {
 		for (int j = 0; j < numCols; j++) {
-			//printf("%d", image[i][j]);
 			char displayChar = ' ';
 			switch (image[i][j]) {
 				case 0: 
@@ -114,7 +110,7 @@ void displayImage(){
 					break;
 				default:
 					displayChar = '?';
-					break; // In case of unexpected values or errors with images, good reference 
+					break;
 				}
 			printf("%c", displayChar);
 		}
@@ -131,7 +127,7 @@ void editImage(){
 			printf("1: Crop image\n");
 			printf("2: Dim image\n");
 			printf("3: Brighten Image\n");
-			printf("4:rotate 90\n");
+			printf("4: Rotate 90\n");
 			printf("0: Return to main menu\n\n");
 			printf("Choose from one of the options above: ");
 			scanf("%d", &choice);
@@ -159,10 +155,11 @@ void editImage(){
 	}
 	
 }
-//the cropping works and will do the job, but its not displaying properly right now, not 100% sure what's going on with it
 void cropImage(int image[MAX_ROWS][MAX_COLS], int* rows, int* cols){
 	int leftCol, rightCol, top_row, bot_row;
     int cropped_pic[MAX_ROWS][MAX_COLS];
+
+	markedImage();
 	
     printf("Which column do you want to be the new left side? ");
     scanf("%d", &leftCol);
@@ -187,6 +184,7 @@ void cropImage(int image[MAX_ROWS][MAX_COLS], int* rows, int* cols){
 	*cols = newCols;
 
 	displayImage(cropped_pic, newRows, newCols);
+	saveImage();
 }
 void dimImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
 	for(int i = 0; i < rows; i++){
@@ -203,6 +201,7 @@ void dimImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
         }
         printf("\n");
     }
+	saveImage();
 }
 void brightenImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
 	for(int i = 0; i < rows; i++){
@@ -219,8 +218,9 @@ void brightenImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
         }
         printf("\n");
     }
+	saveImage();
 }
-void saveImage(char filename[]){
+void saveImage(){
 	char customFile[100];
 	printf("Would you like to save the file? (y/n) ");
 	char choice;
@@ -246,44 +246,53 @@ void saveImage(char filename[]){
 		printf("Image successfully saved!");
 	}
 }
-//function to display the test image with the corner markings for rows/columns
-void markedImage(int image[MAX_ROWS][MAX_COLS], int rows, int cols, int top_row, int bot_row, int leftCol, int rightCol){
-    //top left and right markers
-    printf("    ");
-    for(int j = 0; j < cols; j++){
-        printf("%3d", j);
-    }
-    printf("\n");
-    //first and last column markers
-    for(int i = 0; i < rows; i++){
-        printf("%3d", i);
-        for(int j = 0; j < cols; j++){
-            if(j == leftCol || j == rightCol){
-                printf("%3d", j);
-            } else {
-               printf("%3d", image[i][j]); 
-            }
-        }
-        printf("\n");
-    }
+void markedImage(){
+	int totalRows = 1;
+	int totalCols = 1;
+	int tempRows = numRows;
+	int tempCols = numCols;
+	while(tempRows /= 10) totalRows++;
+	while(tempCols /= 10) totalCols++;
 
-    //bottom left marker? (needs work, will print beneath bottom left as written)
-    printf("    ");
-    for(int j = 0; j < cols; j++){
-        printf("%3d", j);
+	printf(" ");
+	printf("%*d", totalCols, 0);
+    for(int j = 1; j < numCols - 1; j++){
+        printf("%*s", totalCols, "");
     }
-    printf("\n");
-}
-//this is kind of useless right now, but can be used if we need to explicitly call the cropped image anywhere
-void croppedImage(int rows, int cols, int image[MAX_ROWS][MAX_COLS]){
-    for(int i = 0; i < rows; i++){
-        for(int j = 0; j < cols; j++){
-            printf("%3d", image[i][j]);
-        }
-        printf("\n");
-    }
-}
+    printf("%*d\n", totalCols, numCols - 1);
 
+    for(int i = 0; i < numRows; i++){
+    	printf("%*d", totalRows, i);
+    	for (int j = 0; j < numCols; j++){
+			char displayChar = ' ';
+        	switch(image[i][j]){
+				case 0: 
+					displayChar = ' '; 
+					break;
+				case 1: 
+					displayChar = '.';
+					break;
+				case 2:
+					displayChar = 'o';
+					break;
+				case 3:
+					displayChar = 'O';
+					break;
+				case 4:
+					displayChar = '0';
+					break;
+				default:
+					displayChar = '?';
+					break;
+			}
+			printf("%2c", displayChar);
+        }
+		printf("\n");
+    }
+	
+	printf("The image you want to crop is %d x %d.\n", numRows, numCols);
+	printf("The row and column values start in the upper lefthand corner.\n\n");
+}
 void rotate90AndSave() {
 	if (!imageLoaded) {
 		printf("No image loaded to rotate!\n");
